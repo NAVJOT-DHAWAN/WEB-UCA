@@ -7,8 +7,9 @@ var arr = [];
 
 app.use(express.json());
 app.use(cors());
-
-app.get('/',function(req,res){
+app.use(express.static("public"));
+app.use(express.urlencoded({ extended: false }))
+/*app.get('/',function(req,res){
     res.sendFile(__dirname +'/Products.html');
 })
 
@@ -18,11 +19,12 @@ app.get('/Styling.css',function(req,res){
 
 app.get('/Products.js',function(req,res){
     res.sendFile(__dirname +'/Products.js');
-})
+})*/
 
 app.get("/get",function(req,res) {
-	var x = req.body
+	var x = req.query
     console.log(x);
+    res.send("true");
 })
 
 app.post("/post",function(req,res) {
