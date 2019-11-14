@@ -217,7 +217,7 @@ function removeFromLocalStorage(selectedIndex)
 {
 	var del = JSON.parse(localStorage.getItem('products'));
     retrieveFromServer(selectedIndex,function(status) {
-        if(status == true)
+        if(status == "true")
         {
             alert("deleted from server");
         }
@@ -497,9 +497,8 @@ function sendToServer(data)
 }
 
 function retrieveFromServer(index,callback)
-{
-   var i = JSON.stringify(index); 
-   var xhr = new XMLHttpRequest();
+{ 
+    var xhr = new XMLHttpRequest();
     xhr.withCredentials = true;
     xhr.addEventListener("readystatechange", function () {
     if (this.readyState === 4) {
@@ -507,7 +506,7 @@ function retrieveFromServer(index,callback)
      }
       });
 
-    xhr.open("GET","http://localhost:5000/get");
-    xhr.setRequestHeader("Content-Type", "application/json");
-    xhr.send(i);
+    xhr.open("GET","http://localhost:5000/get?index="+index);
+   // xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.send();
 }
