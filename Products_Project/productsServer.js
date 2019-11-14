@@ -22,8 +22,17 @@ app.get('/Products.js',function(req,res){
 })*/
 
 app.get("/get",function(req,res) {
-	var x = req.query
-    console.log(x);
+	var index = req.query.index
+    for(var i=0;i<arr.length;i++)
+    {
+    	if(i==index)
+    	{
+    		arr.splice(index,1);
+    		break;
+    	}
+    }
+    console.log(index);
+    console.log(arr);
     res.send("true");
 })
 
