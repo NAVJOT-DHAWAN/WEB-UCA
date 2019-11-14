@@ -463,7 +463,7 @@ function editContentInArray(index)
    removeNewPanel();
    unhidingAddingProductsLink();
    console.log(productsArray[index]["Id"]);
-   //localStorage.setItem('products',JSON.stringify(productsArray));
+   localStorage.setItem('products',JSON.stringify(productsArray));
    sendToServer(productsArray);
    editDOMContent(productsArray[index].Id,index);
    
