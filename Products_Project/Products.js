@@ -71,7 +71,9 @@ function addProductToArray()
     Productobject.QUAN = document.getElementById("productQuantity").value;
 
     productsArray.push(Productobject);
-    localStorage.setItem('products',JSON.stringify(productsArray));
+    //localStorage.setItem('products',JSON.stringify(productsArray));
+    //Connecting with server
+    sendToServer(productsArray);
     addProducttoModel(Productobject);
     removeNewPanel();
     productId++;
@@ -214,6 +216,12 @@ function addToCartArray(t)
 function removeFromLocalStorage(selectedIndex)
 {
 	var del = JSON.parse(localStorage.getItem('products'));
+    retrieveFromServer(selectedIndex,function(status) {
+        if(status == true)
+        {
+            alert("deleted from server");
+        }
+    });
 	del.splice(selectedIndex,1);
 	localStorage.setItem('products',JSON.stringify(del));
 	console.log(del);
@@ -250,6 +258,7 @@ function removeFromproductsArray(selectedIndex)
 {
 	productsArray.splice(selectedIndex,1);
 	console.log(productsArray);
+
 }
 
 function hideAddingProductsLink()
@@ -295,23 +304,16 @@ function validate()
 		return false;
     }
 
-    if(price_Val == "")
+    if(price_Val == "" || price_Val == NaN)
     {
     	window.alert("Please Enter Product Price");
 		//desc_Val.focus();
 		return false;
     }
 
-    if(quan_Val == "")
+    if(quan_Val == "" || price_Val == NaN)
     {
     	window.alert("Please Enter Product Quantity");
-		//desc_Val.focus();
-		return false;
-    }
-
-    if(quan_Val > 10)
-    {
-    	window.alert("Quantity cannot be more than 10Kg");
 		//desc_Val.focus();
 		return false;
     }
@@ -386,7 +388,7 @@ function productsPanel()
 
 function EditInPoductsPanel(index)
 {
-	hideAddingProductsLink();
+    hideAddingProductsLink();
 
     var addProductHeading = document.createElement("label");
     addProductHeading.innerHTML = "Edit the Contents";
@@ -461,7 +463,8 @@ function editContentInArray(index)
    removeNewPanel();
    unhidingAddingProductsLink();
    console.log(productsArray[index]["Id"]);
-   localStorage.setItem('products',JSON.stringify(productsArray));
+   //localStorage.setItem('products',JSON.stringify(productsArray));
+   sendToServer(productsArray);
    editDOMContent(productsArray[index].Id,index);
    
 }
@@ -475,9 +478,36 @@ function editDOMContent(idOfContent,indexOfContent)
    //console.log(x +" " +y);
 }
 
-/*function AddtoStorage()
+function sendToServer(data)
 {
    
-   listingCartItems.setAttribute("style","color:red");
+    var data = JSON.stringify(data);
+    localStorage.setItem("products",data);
+    var xhr = new XMLHttpRequest();
+    xhr.withCredentials = true;
+    xhr.addEventListener("readystatechange", function () {
+    if (this.readyState === 4) {
+    console.log(this.responseText);
+     }
+      });
    
-}*/
+   xhr.open("POST", "http://localhost:5000/post");
+   xhr.setRequestHeader("Content-Type", "application/json");
+   xhr.send(data);
+}
+
+function retrieveFromServer(index,callback)
+{
+   var i = JSON.stringify(index); 
+   var xhr = new XMLHttpRequest();
+    xhr.withCredentials = true;
+    xhr.addEventListener("readystatechange", function () {
+    if (this.readyState === 4) {
+      callback(this.responseText);
+     }
+      });
+
+    xhr.open("GET","http://localhost:5000/get");
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.send(i);
+}
