@@ -1,14 +1,27 @@
 var express = require("express");
+const fs = require("fs");
 var app = express();
 var cors = require("cors");
 var port = 5000;
-var arr = [];
+var product = [];
+var cart = [];
 
 
 app.use(express.json());
 app.use(cors());
 app.use(express.static("public"));
 app.use(express.urlencoded({ extended: false }))
+
+fs.readFile('file.txt',(err,data) =>{
+	if(err)
+	{   console.error(err);
+	    return;
+	}
+	else
+		console.log(data.toString());
+        //product = JSON.parse(data);
+	
+})
 /*app.get('/',function(req,res){
     res.sendFile(__dirname +'/Products.html');
 })
@@ -23,22 +36,27 @@ app.get('/Products.js',function(req,res){
 
 app.get("/get",function(req,res) {
 	var index = req.query.index
-    for(var i=0;i<arr.length;i++)
+    for(var i=0;i<product.length;i++)
     {
     	if(i==index)
     	{
-    		arr.splice(index,1);
+    		product.splice(index,1);
     		break;
     	}
     }
     console.log(index);
-    console.log(arr);
+    console.log(product);
     res.send("true");
 })
 
 app.post("/post",function(req,res) {
-	arr = req.body
-	console.log(arr)
+	//arr = req.body
+	fs.writeFile('file.txt',JSON.stringify(req.body),(err,data) =>{
+		if(err)
+			console.log(err);
+		console.log("file has been saved")
+	})
+	console.log(product)
     res.send(req.body);
 })
 
